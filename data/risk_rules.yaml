@@ -1,0 +1,31 @@
+rules:
+  - id: amount-high
+    name: Amount exceeds 100000
+    type: amount_threshold
+    threshold: 100000
+    risk: 0.45
+    blocking: false
+  - id: foreign-tx
+    name: Foreign transaction
+    type: foreign_transaction
+    threshold: 1
+    risk: 0.22
+    blocking: false
+  - id: burst-velocity
+    name: Multiple transactions in seconds
+    type: burst_velocity
+    threshold: 3
+    risk: 0.4
+    blocking: true
+  - id: geo-velocity
+    name: Impossible geo velocity
+    type: geo_velocity
+    threshold: 900
+    risk: 0.55
+    blocking: true
+  - id: new-device
+    name: First seen device
+    type: new_device
+    threshold: 1
+    risk: 0.18
+    blocking: false

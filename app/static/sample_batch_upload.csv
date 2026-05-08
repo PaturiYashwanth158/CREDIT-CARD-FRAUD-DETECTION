@@ -1,0 +1,5 @@
+transaction_id,user_id,card_number,expiry_month,expiry_year,cvv,amount,currency,merchant_id,merchant_country,is_foreign,device_id,ip_address,latitude,longitude,transaction_ts
+batch_tx_001,user_001,4539687543209403,12,2030,123,1250.5,INR,m_retail_01,IN,False,device_aarav_phone,10.0.0.10,28.6121,77.2071,2026-04-02T10:00:00
+batch_tx_002,user_002,4532129292439623,11,2031,123,84500.0,INR,m_airline_99,US,False,device_mia_ios,10.0.0.11,37.7765,-122.4191,2026-04-02T10:01:00
+batch_tx_003,user_003,5167446551674230,10,2032,123,155000.0,INR,m_electronics_77,SG,True,unknown_tablet_1,10.0.0.12,1.2902,103.8519,2026-04-02T10:02:00
+batch_tx_004,user_001,9999999999999999,12,2030,123,2200.0,INR,m_grocery_04,IN,False,device_aarav_phone,10.0.0.13,28.6135,77.2069,2026-04-02T10:03:00

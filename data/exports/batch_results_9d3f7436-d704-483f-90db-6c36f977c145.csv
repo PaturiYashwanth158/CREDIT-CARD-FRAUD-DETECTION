@@ -1,0 +1,5 @@
+transaction_id,decision,risk_score,is_fraud,valid_card,issuer,masked_card_number,reasons
+batch_tx_001,approved,0.0347,False,True,VISA,**** **** **** 9403,device_tx_count_24h impact=-0.0721 | seconds_since_last_tx impact=-0.0671 | distance_from_home_km impact=-0.0640 | geo_velocity_kmh impact=-0.0517 | tx_count_last_5m impact=-0.0500
+batch_tx_002,approved,0.1154,False,True,VISA,**** **** **** 9623,device_tx_count_24h impact=-0.0720 | seconds_since_last_tx impact=-0.0711 | distance_from_home_km impact=-0.0659 | geo_velocity_kmh impact=-0.0517 | tx_count_last_5m impact=-0.0499
+batch_tx_003,approved,0.528,False,True,MASTERCARD,**** **** **** 4230,device_tx_count_24h impact=-0.0720 | seconds_since_last_tx impact=-0.0705 | distance_from_home_km impact=+0.0684 | geo_velocity_kmh impact=-0.0517 | merchant_risk_score impact=+0.0511 | Amount exceeds 100000 | Foreign transaction | First seen device
+batch_tx_004,blocked,1.0,True,False,UNKNOWN,**** **** **** 9999,Luhn checksum failed | BIN not issued by bank | Unsupported card issuer

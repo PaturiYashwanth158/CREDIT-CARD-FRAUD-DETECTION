@@ -1,0 +1,5 @@
+transaction_id,decision,risk_score,is_fraud,valid_card,issuer,masked_card_number,known_fraud_label,normalized_user_id,reasons
+batch_tx_001,approved,0.0353,False,True,VISA,**** **** **** 9403,,user_001,is_foreign impact=-0.0888 | new_device impact=-0.0841 | merchant_risk_score impact=-0.0664 | card_age_risk impact=-0.0654 | amount impact=-0.0411
+batch_tx_002,approved,0.1128,False,True,VISA,**** **** **** 9623,,user_002,is_foreign impact=-0.0853 | new_device impact=-0.0808 | merchant_risk_score impact=-0.0641 | card_age_risk impact=-0.0624 | amount impact=-0.0547
+batch_tx_003,approved,0.375,False,True,MASTERCARD,**** **** **** 4230,,user_003,new_device impact=-0.1274 | card_age_risk impact=-0.0936 | amount impact=-0.0745 | is_foreign impact=+0.0401 | profile_avg_spend impact=-0.0397 | Amount exceeds 100000 | Foreign transaction
+batch_tx_004,blocked,1.0,True,False,UNKNOWN,**** **** **** 9999,,user_001,Luhn checksum failed | BIN not issued by bank | Unsupported card issuer

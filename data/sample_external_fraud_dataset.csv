@@ -1,0 +1,6 @@
+Time,Amount,Class,merchant,merchant_country
+120,148.25,0,m_coffee_01,US
+480,4899.00,1,m_suspicious_07,SG
+860,870.50,0,m_grocery_04,US
+1400,125000.00,1,m_electronics_77,AE
+1900,745.10,0,m_airline_99,US

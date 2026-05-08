@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fraud Decision Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css?v=20260409c" />
+</head>
+<body class="role-guest">
+  <div class="shell">
+    <header class="portal-header">
+      <div class="header-brand">
+        <p class="eyebrow">Credit Intelligence Platform</p>
+        <h1 id="portalTitle">Fraud Decision Portal</h1>
+        <p id="portalLead" class="lede">
+          Clean role-based workspaces for fraud operations and customer payment decisions.
+        </p>
+      </div>
+      <div class="header-actions">
+        <a class="ghost-button" href="http://localhost:8501" target="_blank" rel="noreferrer">Open Dashboard</a>
+        <a class="ghost-button" href="/docs" target="_blank" rel="noreferrer">Open API Docs</a>
+        <button id="logoutButton" class="ghost-button hidden" type="button">Logout</button>
+      </div>
+    </header>
+
+    <div class="app-shell">
+      <aside id="guestRail" class="left-rail">
+      <section class="panel auth-panel reveal panel-reveal">
+        <div class="panel-header">
+          <h2>Portal Login</h2>
+          <span id="sessionBadge" class="badge muted">Not authenticated</span>
+        </div>
+        <form id="loginForm" class="stack">
+          <label>
+            Username
+            <input type="text" id="username" value="admin" required />
+          </label>
+          <label>
+            Password
+            <input type="password" id="password" value="admin123" required />
+          </label>
+          <input type="hidden" id="loginDeviceId" name="device_id" />
+          <button type="submit" class="primary-button">Authenticate</button>
+        </form>
+        <p class="hint">Demo accounts: <code>admin/admin123</code>, <code>aarav/aarav123</code>, <code>mia/mia123</code>, <code>luca/luca123</code>.</p>
+        <p class="hint">Use <code>admin</code> to open real-time transaction analysis and bulk CSV detection. Use a customer account to test the payment journey.</p>
+        <div class="quick-logins">
+          <button type="button" class="ghost-button quick-login" data-username="admin" data-password="admin123">Use Admin</button>
+          <button type="button" class="ghost-button quick-login" data-username="aarav" data-password="aarav123">Use Aarav</button>
+          <button type="button" class="ghost-button quick-login" data-username="mia" data-password="mia123">Use Mia</button>
+        </div>
+      </section>
+
+      <section class="panel metrics-panel reveal panel-reveal delay-1">
+        <div class="panel-header">
+          <h2>Session Snapshot</h2>
+          <button id="refreshSession" class="ghost-button" type="button">Refresh</button>
+        </div>
+        <div class="metrics-grid">
+          <article class="metric-card">
+            <span>Role</span>
+            <strong id="metricRole">Guest</strong>
+          </article>
+          <article class="metric-card">
+            <span>Name</span>
+            <strong id="metricName">-</strong>
+          </article>
+          <article class="metric-card">
+            <span>Focus Metric</span>
+            <strong id="metricFocus">0</strong>
+          </article>
+        </div>
+      </section>
+      </aside>
+
+      <main class="workspace-stage">
+
+      <section id="userWorkspace" class="panel wide hidden workspace-shell user-shell">
+        <div class="panel-header">
+          <h2>Your Banking Workspace</h2>
+          <span class="badge">Cards and payment approval</span>
+        </div>
+        <div class="workspace-frame">
+          <div class="workspace-tabs" data-tab-group="user-workspace">
+            <button type="button" class="workspace-tab is-active" data-tab-target="user-overview">Overview</button>
+            <button type="button" class="workspace-tab" data-tab-target="user-payment">Payment</button>
+            <button type="button" class="workspace-tab" data-tab-target="user-history">History</button>
+          </div>
+
+          <div class="workspace-panels">
+            <div class="tab-panel is-active" data-tab-panel="user-workspace" data-tab-id="user-overview">
+              <div class="user-insights reveal-card">
+                <article class="insight-card">
+                  <span>Card Portfolio</span>
+                  <strong id="userPortfolioStat">0 cards</strong>
+                  <p>Active credit lines available for payment authorization.</p>
+                </article>
+                <article class="insight-card">
+                  <span>Trusted Devices</span>
+                  <strong id="userDeviceStat">0 devices</strong>
+                  <p>Known devices recognized by the fraud engine.</p>
+                </article>
+                <article class="insight-card">
+                  <span>Approval Rate</span>
+                  <strong id="userDecisionStat">0%</strong>
+                  <p>Recent payment decisions across approved, review, and blocked events.</p>
+                </article>
+              </div>
+              <div class="subgrid">
+                <div class="panel inset reveal-card">
+                  <h3>Your Profile</h3>
+                  <div id="userProfileSummary" class="result-card placeholder">Authenticate as a user to load your profile.</div>
+                </div>
+                <div class="panel inset reveal-card">
+                  <h3>Your Credit Cards</h3>
+                  <div id="userCards" class="cards-grid">
+                    <p class="placeholder">No cards loaded.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-panel" data-tab-panel="user-workspace" data-tab-id="user-payment">
+              <div class="panel inset reveal-card payment-stage">
+                <div class="panel-header">
+                  <h3>Make Payment</h3>
+                  <span class="badge">Fraud decision before authorization</span>
+                </div>
+                <div class="system-note">
+                  <strong>System-detected context</strong>
+                  <p>Device ID, IP, device location, and foreign-transaction status are detected automatically by the platform after you select a merchant.</p>
+                </div>
+                <form id="paymentForm" class="form-grid">
+                  <label><span>Select Card</span><select name="card_account_id" id="cardAccountSelect"></select></label>
+                  <label><span>Select Merchant</span><select name="merchant_id" id="paymentMerchantSelect" required></select></label>
+                  <label><span>CVV</span><input name="cvv" value="123" required /></label>
+                  <label><span>Amount</span><input name="amount" type="number" step="0.01" value="4999" required /></label>
+                  <input name="currency" type="hidden" value="INR" />
+                  <input name="device_id" id="paymentDeviceId" type="hidden" />
+                  <input name="latitude" id="paymentLatitude" type="hidden" />
+                  <input name="longitude" id="paymentLongitude" type="hidden" />
+                  <div class="form-actions">
+                    <button type="submit" class="primary-button">Evaluate Payment</button>
+                  </div>
+                </form>
+                <div id="paymentResult" class="result-card placeholder">Payment decisions will appear here with approval, review, or block status.</div>
+              </div>
+            </div>
+
+            <div class="tab-panel" data-tab-panel="user-workspace" data-tab-id="user-history">
+              <div class="panel inset reveal-card timeline-panel">
+                <h3>Recent Payment Decisions</h3>
+                <div id="userTransactions" class="alerts-list">
+                  <p class="placeholder">No transactions loaded.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="adminWorkspace" class="panel wide hidden workspace-shell admin-shell">
+        <div class="panel-header">
+          <h2>Admin Command Center</h2>
+          <span class="badge">Real-time and batch control</span>
+        </div>
+        <div class="workspace-frame">
+          <div class="workspace-tabs" data-tab-group="admin-workspace">
+            <button type="button" class="workspace-tab is-active" data-tab-target="admin-monitor">Monitoring</button>
+            <button type="button" class="workspace-tab" data-tab-target="admin-investigate">Investigate</button>
+            <button type="button" class="workspace-tab" data-tab-target="admin-batch">Batch</button>
+          </div>
+
+          <div class="workspace-panels">
+            <div class="tab-panel is-active" data-tab-panel="admin-workspace" data-tab-id="admin-monitor">
+              <div class="panel inset reveal-card admin-live-panel">
+                <div class="panel-header">
+                  <div>
+                    <h3>Live User Payment Analysis</h3>
+                    <p class="hint">Every customer payment decision appears here for admin review.</p>
+                  </div>
+                  <span class="badge">Auto refresh</span>
+                </div>
+                <div id="adminPaymentAnalyses" class="alerts-list">
+                  <p class="placeholder">Customer payment analyses will appear here.</p>
+                </div>
+              </div>
+              <div class="panel inset reveal-card admin-live-panel">
+                <div class="panel-header">
+                  <div>
+                    <h3>Recent User Transactions</h3>
+                    <p class="hint">Review the latest user transactions and open the full analysis instantly.</p>
+                  </div>
+                  <span class="badge">Investigation view</span>
+                </div>
+                <div id="adminRecentTransactions" class="alerts-list">
+                  <p class="placeholder">Recent transactions will appear here.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-panel" data-tab-panel="admin-workspace" data-tab-id="admin-investigate">
+              <div class="panel inset reveal-card">
+                <div class="panel-header">
+                  <h3>Selected Transaction Investigation</h3>
+                  <span class="badge">User transaction analysis</span>
+                </div>
+                <div class="stack">
+                  <label>
+                    <span>Select User Transaction</span>
+                    <select id="adminTransactionSelect"></select>
+                  </label>
+                  <div class="form-actions">
+                    <button id="adminLoadTransaction" type="button" class="primary-button">Open Selected Transaction Analysis</button>
+                  </div>
+                </div>
+                <p class="hint admin-hint">Admin investigation now runs only from real user transactions. Select a recent user transaction to inspect its amount, merchant, decision, rules, and model explanation without typing manual card details.</p>
+                <div id="adminTransactionSnapshot" class="result-card placeholder">Selected user transaction details will appear here.</div>
+                <div id="predictResult" class="result-card placeholder">Admin transaction analysis results will appear here.</div>
+              </div>
+            </div>
+
+            <div class="tab-panel" data-tab-panel="admin-workspace" data-tab-id="admin-batch">
+              <div class="panel inset reveal-card">
+                <div class="panel-header">
+                  <h3>Batch CSV Detection</h3>
+                  <span class="badge">Bulk processing</span>
+                </div>
+                <form id="batchForm" class="stack">
+                  <label class="file-drop">
+                    <span>Select CSV file</span>
+                    <input id="csvFile" type="file" accept=".csv" required />
+                  </label>
+                  <button type="submit" class="primary-button">Upload And Score CSV</button>
+                  <button id="useSampleCsv" type="button" class="ghost-button">Use bundled sample CSV</button>
+                </form>
+                <div id="batchResult" class="result-card placeholder">Batch upload results will appear here with fraud counts and export path.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="globalAlertsPanel" class="panel reveal panel-reveal delay-2">
+        <div class="panel-header">
+          <h2>Alerts And Decisions</h2>
+          <button id="refreshAlerts" class="ghost-button" type="button">Refresh</button>
+        </div>
+        <div id="alertsList" class="alerts-list">
+          <p class="placeholder">Authenticate to load alerts or personal decision history.</p>
+        </div>
+      </section>
+      </main>
+    </div>
+  </div>
+
+  <template id="alertTemplate">
+    <article class="alert-card">
+      <div class="alert-head">
+        <span class="severity"></span>
+        <span class="risk"></span>
+      </div>
+      <strong class="message"></strong>
+      <p class="meta"></p>
+    </article>
+  </template>
+
+  <script src="/static/portal.js?v=20260409g"></script>
+</body>
+</html>

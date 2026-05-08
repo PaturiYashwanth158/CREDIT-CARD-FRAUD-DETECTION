@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HugWand | Gesture Desktop Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/hugwand.css" />
+</head>
+<body>
+  <div class="page-glow page-glow-a"></div>
+  <div class="page-glow page-glow-b"></div>
+
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Local Gesture Pilot</p>
+        <div class="brand-line">
+          <span class="brand-mark"></span>
+          <span class="brand-name">HugWand</span>
+        </div>
+        <h1>Control your PC with your hand, not your keyboard.</h1>
+        <p class="lede">
+          HugWand turns your webcam into a live command layer. Hold an open palm to arm the system, point to steer the cursor, pinch to click, and use simple poses for media and desktop actions.
+        </p>
+
+        <div class="action-row">
+          <button class="primary-button" id="enableCameraButton">Enable Camera</button>
+          <button class="ghost-button" id="disarmButton" type="button">Emergency Stop</button>
+        </div>
+
+        <div class="status-strip">
+          <div class="status-chip" data-status="idle" id="cameraStatusChip">
+            <span>Camera</span>
+            <strong id="cameraStatusText">Offline</strong>
+          </div>
+          <div class="status-chip" data-status="idle" id="trackingStatusChip">
+            <span>Tracking</span>
+            <strong id="trackingStatusText">Waiting</strong>
+          </div>
+          <div class="status-chip" data-status="idle" id="systemStatusChip">
+            <span>System</span>
+            <strong id="systemStatusText">Disarmed</strong>
+          </div>
+        </div>
+
+        <div class="safety-note">
+          <p>Designed for local use on your own machine. The prototype only exposes a small set of desktop actions and never arms itself automatically.</p>
+        </div>
+      </div>
+
+      <div class="hero-stage">
+        <div class="camera-panel">
+          <div class="camera-topline">
+            <div>
+              <p class="panel-kicker">Live Vision Feed</p>
+              <h2>Gesture lock and command stream</h2>
+            </div>
+            <div class="pulse-pill" id="liveIndicator">Idle</div>
+          </div>
+
+          <div class="camera-frame">
+            <video id="cameraFeed" autoplay playsinline muted></video>
+            <canvas id="gestureOverlay"></canvas>
+            <div class="frame-scan"></div>
+
+            <div class="overlay-card overlay-top-left">
+              <span>Gesture</span>
+              <strong id="gestureLabel">No hand detected</strong>
+            </div>
+
+            <div class="overlay-card overlay-top-right">
+              <span>Command</span>
+              <strong id="commandLabel">Stand by</strong>
+            </div>
+
+            <div class="overlay-card overlay-bottom-left">
+              <span>Pointer Mode</span>
+              <strong id="pointerLabel">Inactive</strong>
+            </div>
+
+            <div class="overlay-card overlay-bottom-right">
+              <span>Platform</span>
+              <strong id="platformLabel">Loading</strong>
+            </div>
+          </div>
+
+          <div class="feed-footer">
+            <div>
+              <p class="panel-kicker">Operator Prompt</p>
+              <p class="operator-copy" id="operatorPrompt">Enable the camera, center one hand in frame, then hold an open palm for 1.2 seconds to arm HugWand.</p>
+            </div>
+            <div class="console">
+              <p class="panel-kicker">Console</p>
+              <ul id="eventLog"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="gesture-band">
+      <div class="band-copy">
+        <p class="eyebrow">Gesture Language</p>
+        <h2>Eight gestures, one clear command vocabulary.</h2>
+      </div>
+      <div class="gesture-grid" id="gestureGrid"></div>
+    </section>
+
+    <section class="protocol">
+      <div class="protocol-panel">
+        <p class="eyebrow">Control Protocol</p>
+        <h2>How this first version behaves</h2>
+      </div>
+
+      <div class="protocol-columns">
+        <article>
+          <span>01</span>
+          <h3>Arm deliberately</h3>
+          <p>An open palm held steady turns the assistant on. A fist held steady shuts everything down immediately.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Move with intention</h3>
+          <p>Pointing enters air-mouse mode. The index fingertip becomes a cursor target across your screen.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Use short commands</h3>
+          <p>Peace toggles playback, thumbs adjust volume, palm swipes handle track changes and desktop views.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <script src="/static/hugwand.js" defer></script>
+</body>
+</html>

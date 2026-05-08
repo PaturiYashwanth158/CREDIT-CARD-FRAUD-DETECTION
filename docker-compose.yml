@@ -1,0 +1,107 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: fraud_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  model-service:
+    build:
+      context: .
+      dockerfile: docker/model.Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@postgres:5432/fraud_db
+      MODEL_SERVICE_URL: http://model-service:8001
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8001:8001"
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    depends_on:
+      - postgres
+      - kafka
+      - model-service
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@postgres:5432/fraud_db
+      MODEL_SERVICE_URL: http://model-service:8001
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+
+  consumer:
+    build:
+      context: .
+      dockerfile: docker/consumer.Dockerfile
+    depends_on:
+      - postgres
+      - kafka
+      - model-service
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@postgres:5432/fraud_db
+      MODEL_SERVICE_URL: http://model-service:8001
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: docker/dashboard.Dockerfile
+    depends_on:
+      - postgres
+      - kafka
+      - backend
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@postgres:5432/fraud_db
+      MODEL_SERVICE_URL: http://model-service:8001
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+
+volumes:
+  postgres_data:
